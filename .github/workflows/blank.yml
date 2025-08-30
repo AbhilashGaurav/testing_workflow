@@ -1,0 +1,18 @@
+name: Storybook Python CI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+   
+      # step 5: combine clips
+      - name: combine clips
+        run: |
+              sudo apt-get update && sudo apt-get install -y ffmpeg
+        
+
+
