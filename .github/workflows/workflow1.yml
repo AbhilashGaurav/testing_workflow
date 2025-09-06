@@ -1,4 +1,4 @@
-name: Workflow 1
+name: Workflow 1 - Build and Commit
 
 on:
   push:
@@ -12,11 +12,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create file
-        run: echo "Hello from Workflow 1" > output.txt
+      - name: Create artifact
+        run: echo "Hello from Workflow 1 at $(date)" > output.txt
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: output-file
-          path: output.txt
+      - name: Push artifact to artifacts branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # fetch artifacts branch or create if not exists
+          git fetch origin artifacts || true
+          git checkout artifacts || git checkout --orphan artifacts
+
+          # copy artifact into branch
+          cp output.txt artifact-latest.txt
+          git add artifact-latest.txt
+          git commit -m "Update artifact $(date)" || echo "No changes to commit"
+          git push origin artifacts
