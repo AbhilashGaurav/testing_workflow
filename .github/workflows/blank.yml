@@ -1,20 +1,22 @@
-name: Storybook Python CI
+name: Workflow 1
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  run-script:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-   
-      # step 5: combine clips
-      - name: combine clips
-        run: |
-              sudo apt-get update && sudo apt-get install -y ffmpeg
-              ffmpeg -version
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-        
+      - name: Create file
+        run: echo "Hello from Workflow 1" > output.txt
 
-
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: output-file
+          path: output.txt
