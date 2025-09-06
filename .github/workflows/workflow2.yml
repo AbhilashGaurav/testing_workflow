@@ -1,21 +1,20 @@
-name: Workflow 2
+name: Workflow 2 - Use Artifact
 
 on:
   workflow_run:
-    workflows: ["Workflow 1"]   # Name of first workflow
+    workflows: ["Workflow 1 - Build and Commit"]
     types:
       - completed
 
 jobs:
-  download-and-use:
+  use-artifact:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout artifacts branch
+        uses: actions/checkout@v4
         with:
-          name: output-file
-          path: ./artifact
+          ref: artifacts
 
-      - name: Show contents
-        run: cat ./artifact/output.txt
+      - name: Show artifact contents
+        run: cat artifact-latest.txt
